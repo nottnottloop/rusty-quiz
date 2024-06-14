@@ -9,8 +9,22 @@ pub struct Question {
 	correct_answer: i32
 }
 
+impl Question {
+	pub fn text(&self) -> &String {
+		&self.text
+	}
+
+	pub fn answers(&self) -> &Vec<String> {
+		&self.answers
+	}
+
+	pub fn correct_answer(&self) -> i32 {
+		self.correct_answer
+	}
+}
+
 pub fn read_quiz_file() -> Vec<Question> {
-	let mut file = match File::open("quiz_questions.txt") {
+	let file = match File::open("quiz_questions.txt") {
 		Ok(file) => file,
 		Err(_) => {
 			println!("Failed to open \'quiz_questions.txt\'!");
@@ -18,7 +32,7 @@ pub fn read_quiz_file() -> Vec<Question> {
 		}
 	};
 
-	let mut reader = BufReader::new(file);
+	let reader = BufReader::new(file);
 	let mut strings: Vec<String> = Vec::new();
 
 	for line in reader.lines() {
@@ -27,8 +41,6 @@ pub fn read_quiz_file() -> Vec<Question> {
 			strings.push(result);
 		}
 	}
-
-	println!("{:?}", strings);
 
 	let mut questions: Vec<Question> = Vec::new();
 	// questions have:
@@ -44,18 +56,10 @@ pub fn read_quiz_file() -> Vec<Question> {
 				strings.get(3 + question_index * 6).expect("Invalid answer text").clone(),
 				strings.get(4 + question_index * 6).expect("Invalid answer text").clone(),
 			],
-			correct_answer: strings.get(5 + question_index * 6).expect("Invalid answer text").parse().unwrap(),
+			correct_answer: strings.get(5 + question_index * 6).expect("Invalid correct answer text").parse().unwrap(),
 		});
 	}
 
 	println!("{:#?}", questions);
 	questions
-}
-
-#[cfg(test)] 
-mod tests {
-	#[test]
-	fn lol() {
-		assert!(true);
-	}
 }

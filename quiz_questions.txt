@@ -1,13 +1,11 @@
-What is the capital of France?
-Paris
-London
-New York City
-Rome
-1
+What programming language is this quiz game written in?
+Ruby
+Rust
+Python
+JavaScript
 
-What color is the sky?
-Green
-Orange
-Blue
-Yellow
-3
+If one was acting as the name of the Xth dwarf in alphabetical order of Disney's Seven Dwarves where X is implied as the sum of the digits of the year Michael Jackson released his best selling album divided by the number of planets within our solar system rounded up, what might one be doing?
+Not speaking
+Being happy
+Sneezing
+Being angry
