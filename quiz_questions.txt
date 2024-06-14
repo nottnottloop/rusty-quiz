@@ -1,0 +1,13 @@
+What is the capital of France?
+Paris
+London
+New York City
+Rome
+1
+
+What color is the sky?
+Green
+Orange
+Blue
+Yellow
+3
