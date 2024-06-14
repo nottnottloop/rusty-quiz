@@ -1,6 +1,6 @@
 What programming language is this quiz game written in?
-Ruby
 Rust
+Ruby
 Python
 JavaScript
 

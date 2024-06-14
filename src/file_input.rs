@@ -1,12 +1,13 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::process::exit;
+use rand::thread_rng;
+use rand::seq::SliceRandom;
 
 #[derive(Debug, Clone)]
 pub struct Question {
 	text: String,
 	answers: Vec<String>,
-	correct_answer: i32
 }
 
 impl Question {
@@ -18,8 +19,8 @@ impl Question {
 		&self.answers
 	}
 
-	pub fn correct_answer(&self) -> i32 {
-		self.correct_answer
+	pub fn randomize_answers(&mut self) {
+		&self.answers.shuffle(&mut thread_rng());
 	}
 }
 
@@ -44,19 +45,18 @@ pub fn read_quiz_file() -> Vec<Question> {
 
 	let mut questions: Vec<Question> = Vec::new();
 	// questions have:
-	// question (1), the answers (4), and the right answer (1)
-	// so 6 lines per question
-	let number_of_questions = strings.len() / 6;
+	// question (1), the answers (4)
+	// so 5 lines of text
+	let number_of_questions = strings.len() / 5;
 	for question_index in 0..number_of_questions {
 		questions.push(Question{
-			text: strings.get(question_index * 6).expect("Invalid question text").clone(),
+			text: strings.get(question_index * 5).expect("Invalid question text").clone(),
 			answers: vec![
-				strings.get(1 + question_index * 6).expect("Invalid answer text").clone(),
-				strings.get(2 + question_index * 6).expect("Invalid answer text").clone(),
-				strings.get(3 + question_index * 6).expect("Invalid answer text").clone(),
-				strings.get(4 + question_index * 6).expect("Invalid answer text").clone(),
+				strings.get(1 + question_index * 5).expect("Invalid answer text").clone(),
+				strings.get(2 + question_index * 5).expect("Invalid answer text").clone(),
+				strings.get(3 + question_index * 5).expect("Invalid answer text").clone(),
+				strings.get(4 + question_index * 5).expect("Invalid answer text").clone(),
 			],
-			correct_answer: strings.get(5 + question_index * 6).expect("Invalid correct answer text").parse().unwrap(),
 		});
 	}
 

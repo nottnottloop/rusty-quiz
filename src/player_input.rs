@@ -20,8 +20,8 @@ pub fn read_input() -> Result<String, InputError> {
     }
 }
 
-pub fn parse_player_input() -> Result<i32, InputError> {
-	let user_answer: Result<i32, InputError> = match read_input() {
+pub fn parse_player_input() -> Result<usize, InputError> {
+	let user_answer: Result<usize, InputError> = match read_input() {
 		Ok(x) => match x.parse() {
 			Ok(x) => {
 				if (1..=4).contains(&x) {

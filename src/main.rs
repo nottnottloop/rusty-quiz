@@ -29,14 +29,18 @@ fn main() {
     let mut current_question = 0;
     let mut correct_answers = 0;
 
-    for question in &questions {
+    for question in &mut questions {
         current_question += 1;
-        let user_answer: i32;
+        let user_answer: usize;
+
+        let correct_answer = &question.answers()[0].clone();
+        question.randomize_answers();
+
         loop {
             println!("\nScore: {correct_answers}");
             println!("Question {current_question}:");
             println!("{}", question.text());
-            
+
             let mut answers = question.answers().iter();
             println!("1. {} 2. {}", answers.next().unwrap(), answers.next().unwrap());
             println!("3. {} 4. {}", answers.next().unwrap(), answers.next().unwrap());
@@ -54,13 +58,12 @@ fn main() {
             };
             break;
         }
-        if user_answer == question.correct_answer() {
+        if &question.answers()[user_answer - 1] == correct_answer {
             println!("\nYou score a point!");
             correct_answers += 1;
         } else {
-            let correct_answer_text = &question.answers()[(question.correct_answer() - 1) as usize];
             println!("\nUnlucky!");
-            println!("The correct answer was {correct_answer_text}.");
+            println!("The correct answer was {correct_answer}.");
         }
 
         println!("\nPress enter to continue");
