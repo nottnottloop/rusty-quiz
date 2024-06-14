@@ -3,18 +3,15 @@ Paris
 London
 New York City
 Rome
-1
 
 What color is the sky?
+Blue
 Green
 Orange
-Blue
 Yellow
-3
 
 What programming language is this quiz game written in?
-Ruby
 Rust
+Ruby
 Python
 JavaScript
-2

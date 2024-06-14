@@ -1,6 +1,7 @@
 use player_input::parse_player_input;
 use rand::thread_rng;
 use rand::seq::SliceRandom;
+use colored::*;
 
 use player_input::read_input;
 use player_input::InputError;
@@ -9,25 +10,24 @@ mod file_input;
 mod player_input;
 
 fn main() {
-    println!("Reading 'quiz_questions.txt'...");
+    //println!("Reading 'quiz_questions.txt'...");
     let mut questions = file_input::read_quiz_file();
     questions.shuffle(&mut thread_rng());
     
-    println!("*************************");
-    println!("Welcome to the Rusty quiz!");
-    println!("*************************");
-    println!("\nThis quiz will test you on all kinds of really cool questions about the world and stuff. It's amazing.");
-    println!("\nThere are {} questions. Every question you get right you get a point. At the end of the quiz you will get a quiz master ranking.", questions.len());
-    println!("\nPress enter to start");
+    println!("**************************");
+    println!("{}", "Welcome to the Rusty quiz!".yellow());
+    println!("**************************");
+    println!("\nThis quiz will test you on all kinds of really cool questions about the 🌍 world and stuff.");
+    println!("\nThere are {} questions. Every question you get right you get a point.\nAt the end of the quiz you will get a quiz master ranking.", questions.len());
+    println!("\nPress Enter to start");
 
-    match read_input() {
-        _ => ()
-    };
+    wait_for_continue();
 
-    print!("{}[2J", 27 as char);
+    clear_console();
 
     let mut current_question = 0;
     let mut correct_answers = 0;
+    let num_of_questions = questions.len();
 
     for question in &mut questions {
         current_question += 1;
@@ -37,22 +37,33 @@ fn main() {
         question.randomize_answers();
 
         loop {
-            println!("\nScore: {correct_answers}");
-            println!("Question {current_question}:");
-            println!("{}", question.text());
+            println!("{} {}", "Score:".bright_green(), correct_answers.to_string().bright_green());
+            println!("Question {}/{}:", current_question, num_of_questions);
+            println!("\n{}\n", question.text());
 
             let mut answers = question.answers().iter();
-            println!("1. {} 2. {}", answers.next().unwrap(), answers.next().unwrap());
-            println!("3. {} 4. {}", answers.next().unwrap(), answers.next().unwrap());
-            println!("Answer with the number (1-4)");
+            //println!("1. {} 2. {}", answers.next().unwrap(), answers.next().unwrap());
+            //println!("3. {} 4. {}", answers.next().unwrap(), answers.next().unwrap());
+            println!("{}", "---".yellow());
+            for i in 1..=4 {
+                println!("{}. {}", i, answers.next().unwrap());
+            }
+            println!("{}", "---".yellow());
+            println!("\nAnswer with the number (1-4)");
             user_answer = match parse_player_input() {
                 Ok(x) => x,
                 Err(InputError::Empty) => {
                     println!("You need to type something!");
+                    println!("Press Enter to retry");
+                    wait_for_continue();
+                    clear_console();
                     continue;
                 },
                 Err(InputError::Invalid) => {
                     println!("\nInvalid input!");
+                    println!("Press Enter to retry");
+                    wait_for_continue();
+                    clear_console();
                     continue;
                 },
             };
@@ -66,20 +77,19 @@ fn main() {
             println!("The correct answer was {correct_answer}.");
         }
 
-        println!("\nPress enter to continue");
+        println!("\nPress Enter to continue");
 
-        match read_input() {
-            _ => ()
-        };
+        wait_for_continue();
 
-        print!("{}[2J", 27 as char);
+        clear_console();
     }
 
-    println!("Congratulations, you have finished the quiz!");
-    println!("\nAfter {} gruelling questions, I am sure you are in need of a break.", &questions.len());
+    println!("{}", "Congratulations, you have finished the quiz!".bright_yellow());
+    //println!("\nAfter {} gruelling questions, I am sure you are in need of a break.", &questions.len());
 
-    let percent: f32 = (correct_answers as f32 / questions.len() as f32) * 100f32;
-    println!("\nYou got {:.2}% correct! That's a score of {}!", percent, correct_answers);
+    let percent: f32 = (correct_answers as f32 / num_of_questions as f32) * 100f32;
+    print!("\nYou got {:.2}% correct! ", percent);
+    print!("{}{}{}{}{}", "That's ".bright_cyan(), correct_answers.to_string().bright_cyan(), " out of ".bright_cyan(), num_of_questions.to_string().bright_cyan(), "!".bright_cyan());
 
     let quiz_ranking = match percent {
         x if x < 10.0 => "🦃 Total quiz noob, don't play again 🦃",
@@ -95,6 +105,17 @@ fn main() {
         _ => "???"
     };
 
-    println!("\nYour ranking for today is");
-    println!("\n{quiz_ranking}\n");
+    println!("\n\nYour ranking for today is");
+    println!("\n\n{quiz_ranking}");
+    wait_for_continue();
+}
+
+fn clear_console() {
+    clearscreen::clear().unwrap();
+}
+
+fn wait_for_continue() {
+    match read_input() {
+        _ => ()
+    };
 }

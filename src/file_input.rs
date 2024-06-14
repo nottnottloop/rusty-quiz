@@ -4,6 +4,8 @@ use std::process::exit;
 use rand::thread_rng;
 use rand::seq::SliceRandom;
 
+use crate::wait_for_continue;
+
 #[derive(Debug, Clone)]
 pub struct Question {
 	text: String,
@@ -20,7 +22,7 @@ impl Question {
 	}
 
 	pub fn randomize_answers(&mut self) {
-		&self.answers.shuffle(&mut thread_rng());
+		self.answers.shuffle(&mut thread_rng());
 	}
 }
 
@@ -29,6 +31,7 @@ pub fn read_quiz_file() -> Vec<Question> {
 		Ok(file) => file,
 		Err(_) => {
 			println!("Failed to open \'quiz_questions.txt\'!");
+			wait_for_continue();
 			exit(1);
 		}
 	};
@@ -59,7 +62,5 @@ pub fn read_quiz_file() -> Vec<Question> {
 			],
 		});
 	}
-
-	println!("{:#?}", questions);
 	questions
 }
